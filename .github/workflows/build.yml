@@ -22,7 +22,8 @@ jobs:
 
       - name: Install PyInstaller
         run: pip install pyinstaller
-
+      - name: Check project files
+        run: Get-ChildItem -Recurse -File | Select-Object -ExpandProperty FullName
       - name: Build EXE
         run: pyinstaller --noconfirm --onefile --windowed --name FX_Studio_1000 fx_studio.py
 
