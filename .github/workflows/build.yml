@@ -1,0 +1,39 @@
+
+name: Build FX Studio 1000
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build EXE
+        run: pyinstaller --noconfirm --onefile --windowed --name FX_Studio_1000 fx_studio.py
+
+      - name: Include effects
+        run: |
+          if (Test-Path effects) {
+            Copy-Item effects dist/effects -Recurse
+          }
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: FX-Studio-1000-Windows
+          path: dist/
